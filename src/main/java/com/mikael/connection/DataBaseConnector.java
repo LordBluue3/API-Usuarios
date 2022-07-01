@@ -5,17 +5,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DataBaseConnector {
-    private String drive = "org.mariadb.jdbc.Driver";
-    private String url = "jdbc:mariadb://localhost:3306/dbusuarios";
-    private String usuario = "root";
-    private String senha = "";
-
-    Connection con =null;
+    Config config = new Config();
     public Connection conectar() {
         try {
-            Class.forName(drive);
-            con = DriverManager.getConnection(url,usuario,senha);
-            System.out.println("connection on");
+            Class.forName(config.getDrive());
+            Connection con = DriverManager.getConnection(config.getUrl(),config.getUsuario(), config.getSenha());
+            System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            System.out.println("Conexão com o Banco de Dados realizado com exito");
             return con;
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
