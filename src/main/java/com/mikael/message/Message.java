@@ -4,6 +4,7 @@ package com.mikael.message;
 
 
 
+import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -17,6 +18,11 @@ import org.json.simple.JSONObject;
 
 
 public class Message {
+
+    public String idcon;
+    public String usuario;
+    public String email;
+    public String senha;
 
     private final Socket socket;
     private List<String> listOfMessages = null;
@@ -51,7 +57,7 @@ public class Message {
     }
 
     public void imprimirMensagem(){
-        Actions action = new Actions();
+        Actions action = new Actions(idcon,usuario,email,senha);
         for (String msg : listOfMessages) {
 
             try {
@@ -65,12 +71,22 @@ public class Message {
                 System.out.println(action.getEmail());
                 System.out.println(action.getSenha());
                 action.inserir();
+               action.listarUsuarios();
 
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
     }
+    public  void enviarMensagem(){
+        DataOutputStream dos = null;
+        Actions actions = new Actions(idcon,usuario,email,senha);
+        try{
+            dos = new DataOutputStream(socket.getOutputStream());
+            dos.writeUTF(actions.getIdcon()+actions.getUsuario()+actions.getEmail()+actions.getSenha());
+            System.out.println("enviando mensagem");
+        }catch (Exception e){
 
-
+        }
+    }
 }
