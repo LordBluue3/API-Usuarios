@@ -1,6 +1,9 @@
 package com.mikael.connection;
 
 import lombok.Getter;
+/*
+ * Configuração para se conectar ao banco de dados
+ */
 @Getter
 public class Config {
     private String drive = "org.mariadb.jdbc.Driver";
