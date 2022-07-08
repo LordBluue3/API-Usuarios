@@ -1,18 +1,24 @@
 package com.mikael.connection;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import com.mikael.message.Message;
+import lombok.*;
 
+import java.net.Socket;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
-@Data
+@AllArgsConstructor
 public class Actions {
+
+    private String idcon;
     private String usuario;
     private String email;
     private String senha;
+
 
     public void inserir(){
         DataBaseConnector con = new DataBaseConnector();
@@ -38,5 +44,30 @@ public class Actions {
 
         }
     }
+    public DataBaseConnector listarUsuarios(){
+        ArrayList<Actions> usuarios = new ArrayList<>();
+        Message msg = new Message(null, null);
+        DataBaseConnector con = new DataBaseConnector();
+        String read = "select * from usuarios order by usuario";
+        try{
+            con.conectar();
+            PreparedStatement pst = con.close().prepareStatement(read);
+            ResultSet rs = pst.executeQuery();
+            while(rs.next()){
+                String idcon = rs.getString(1);
+                String usuario = rs.getString(2);
+                String email = rs.getString(3);
+                String senha = rs.getString(4);
+                usuarios.add(new Actions(idcon,usuario,email,senha));
+                msg.enviarMensagem();
+
+            }
+            con.close();
+            return con;
+        }catch (Exception f){
+        }
+        return con;
+    }
+
 
 }
