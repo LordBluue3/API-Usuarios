@@ -14,27 +14,37 @@ import java.util.List;
 
 public class ServerSockett {
 
+    /*
+    * Método main que faz um loop que aguarda uma requisição da aplicação,
+    * quando for requisitado algo será chamado o método make
+    */
         public static void main(String[] args) throws IOException {
-
-            ServerSocket ss = new ServerSocket(5000); //A porta que você colocou na sua aplicação
-            List<String> listOfMessages = null;
+            ServerSocket serverSocket = new ServerSocket(5000);
+            List<String> listOfMessages = new ArrayList<String>();
+            DataBaseConnector dataBaseConnector = new DataBaseConnector();
             Socket socket;
-
 
             while(true) {
                 System.out.println("ServerSocket está conectando...");
                 System.out.println("Server conectado, aguardando requisições!!!");
-                DataBaseConnector db = new DataBaseConnector();
-                socket = ss.accept(); //faz com que o while não continue a menos que uma mensagem seja requisitada
+                socket = serverSocket.accept();
                 System.out.println("Conectado ao " + socket + "!");
-                db.conectar();
-                //ler mensagem do cliente
-                List listOfmessagen = new ArrayList<String>();
-                Message mensagem = new Message(socket, listOfMessages);
-                mensagem.lerMensagens();
-                mensagem.imprimirMensagem();
+                make(dataBaseConnector, socket, listOfMessages);
                 socket.close();
 
             }
+        }
+        /*
+         * Método make diz todas as ações que o socket tem que fazer.
+         * Chama o método conectar.
+         * Chama o método ler mensagens.
+         * Chama o método imprimir mensagem.
+         */
+        public static void make(DataBaseConnector dataBaseConnector, Socket socket, List listOfMessages){
+            dataBaseConnector.connection();
+            Message message = new Message(socket, listOfMessages);
+            message.readMessage();
+            message.PrintOutMessage();
+
         }
 }
